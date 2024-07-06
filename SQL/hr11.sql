@@ -86,6 +86,151 @@ alter table studentsinfo drop CONSTRAINT pk_student_id;
 select * from user_constraints where table_name = 'studentsinfo';
 
 select * from user_cons_columns where TABLE_NAME = 'STUDENTSINFO';
+-------------------------------------------------------------------------------------------
+--FOREIGN KEY
+select * from EMPLOYEES;
+SELECT * FROM DEPARTMENTS;
+SELECT * FROM locations;
+SELECT * FROM countries;
+
+drop table vendors;
+drop table vendors_groups;
+
+--PARENT TABLE
+create table vendor_groups
+(
+group_id   NUMBER PRIMARY KEY,
+group_name VARCHAR2(100)
+);
+
+--CHILD TABLE
+create table vendors
+(
+vendor_id   NUMBER PRIMARY KEY,
+Vendor_name VARCHAR2(100),
+Group_id    NUMBER,
+CONSTRAINT FK_GROUP_ID FOREIGN KEY(Group_id)
+REFERENCES vendor_groups (Group_id)
+);
+
+INSERT INTO vendor_groups (group_id,group_name) values (1,'Third-Party Vendors');
+insert into vendor_groups (group_id,group_name) values (2,'Interco Vendors');
+insert into vendor_groups (group_id,group_name) values (3,'One-Time Vendors');
+
+select * from vendor_groups;
+select * from vendors;
+
+INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (1,'ABC Corp',1);
+--INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (2,'XYZ Corp',4);
+INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (2,'XYZ Corp',null);
+INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (3,'ABC Corp',1);
+--INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (4,'XYZ Corp',4);
+--------------------------------------------------------------------------
+UPDATE vendors SET group_id = 3 WHERE group_id IS NULL;
+
+--delete from vendor_groups where group_id = 3;
+DELETE from vendors where group_id = 3;
+-------------------------------------------------------------------------
+--on delete cascade
+drop table vendors;
+drop table vendor_groups;
+
+--PARENT TABLE
+create table vendor_groups
+(
+GROUP_ID   NUMBER PRIMARY KEY,
+group_name VARCHAR2(100)
+);
+
+--child table
+create TABLE vendors
+(
+VENDOR_ID   NUMBER PRIMARY KEY,
+VENDOR_NAME VARCHAR2(100),
+GROUP_ID    NUMBER,
+CONSTRAINT  FK_GROUP_ID FOREIGN KEY(GROUP_ID)
+REFERENCES  vendor_groups (GROUP_ID)
+ON DELETE CASCADE
+);
+
+INSERT INTO vendor_groups (group_id,group_name) values (1,'Third-Party Vendors');
+INSERT INTO vendor_groups (GROUP_ID,group_name) values (2,'Interco Vendors');
+INSERT INTO vendor_groups (GROUP_ID,group_name) values (3,'One-Time Vendors');
+
+select * from vendor_groups;
+select * from vendors;
+
+INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (1,'ABC Corp',1);
+INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (2,'XYZ Corp',null);
+INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (3,'ABC Corp',1);
+INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (4,'XYZ Corp',3);
+INSERT INTO vendors (vendor_id,Vendor_name,Group_id) values (5,'XYZ Corp',2);
+
+
+delete from vendor_groups where GROUP_ID = 3;
+delete from vendor_groups where GROUP_ID = 2;
+--------------------------------------------------------------------------------
+--on delete set null
+drop table vendor_groups;
+drop table vendors;
+
+--parent table
+create table vendor_groups
+(
+group_id    NUMBER Primary Key,
+group_name  VARCHAR2(100)
+);
+--CHILD TABLE
+CREATE TABLE VENDORS
+(
+vendor_id   NUMBER PRIMARY KEY,
+vendor_name VARCHAR2(100),
+group_id    NUMBER,
+CONSTRAINT  FK_GROUP_ID FOREIGN KEY(Group_id)
+REFERENCES  vendor_groups (group_id)
+ON DELETE SET NULL
+);
+
+INSERT INTO vendor_groups (group_id,group_name) VALUES (1,'Third-Party Vendors');
+INSERT INTO vendor_groups (group_id,group_name) VALUES (2,'Interco Vendors');
+INSERT INTO vendor_groups (group_id,group_name) VALUES (3,'One-Time Vendors');
+INSERT INTO vendor_groups (group_id,group_name) VALUES (4,'Multi Vendors');
+
+select * from vendor_groups;
+select * from vendors;
+
+insert into vendors (vendor_id,vendor_name,Group_id) values (1,'ABC Corp',1);
+insert into vendors (vendor_id,vendor_name,Group_id) values (2,'XYZ Corp',null);
+insert into vendors (vendor_id,vendor_name,Group_id) values (3,'ABC Corp',1);
+insert into vendors (vendor_id,vendor_name,Group_id) values (4,'xyz Corp',3);
+insert into vendors (vendor_id,vendor_name,Group_id) values (5,'ABC Corp',2);
+
+DELETE FROM vendor_groups WHERE group_id = 3; 
+delete from vendor_groups where group_id = 2;
+
+update vendors set GROUP_ID = 1 where VENDOR_ID = 5;
+update vendors set GROUP_ID = 4 where vendor_id = 4;
+
+--FK after table created
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
